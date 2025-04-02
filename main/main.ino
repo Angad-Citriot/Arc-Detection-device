@@ -58,11 +58,17 @@ void sensorTask(void* parameter) {
     Serial.print("Meter Status: ");
     Serial.println(meterStatus, HEX);
 
-    float voltage = eic.GetLineVoltage() + 60.0;
-    float current = eic.GetLineCurrent() / 4;
-    float power = eic.GetActivePower() / 1000;
+    float voltage = eic.GetLineVoltage();
+    float current = eic.GetLineCurrent()/100;
+    float power = voltage * current/1000;
+    // float power = eic.GetActivePower()/1000;
     float frequency = eic.GetFrequency();
     float powerFactor = eic.GetPowerFactor();
+    // eic.
+    Serial.print("Current: ");
+    Serial.println(current, HEX);
+    Serial.print("Power: ");
+    Serial.println(power, HEX);
 
     // Ensure no negative values
     if (voltage <= 5) {
@@ -78,6 +84,9 @@ void sensorTask(void* parameter) {
         power = 0;
         powerFactor = 0;
         frequency = 0;
+    }
+    else{
+        voltage = voltage + 40; 
     }
 
     if (current < 0) current = 0;
